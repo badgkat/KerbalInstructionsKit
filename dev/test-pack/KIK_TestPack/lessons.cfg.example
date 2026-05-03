@@ -1,0 +1,133 @@
+// KIK Test Pack — example lessons
+// Copy to GameData/KIK_TestPack/lessons.cfg to use in-game
+
+INSTRUCTION_LESSON
+{
+    id = LSN_TestRocketBasics
+    title = Rocket Basics
+    category = Getting Started
+    tags = rockets, basics, beginner
+    sortOrder = 1
+
+    PAGE
+    {
+        title = What Is a Rocket?
+        text = A rocket is a vehicle that obtains thrust by expelling mass (propellant) at high velocity.\n\nIn KSP, all rockets need at minimum:\n- A command pod or probe core\n- A fuel tank\n- An engine\n- A launch stability enhancer (optional but recommended)
+    }
+
+    PAGE
+    {
+        title = Staging
+        text = Staging controls the order in which parts activate. The bottom stage fires first.\n\nPress Space to advance to the next stage. Make sure your engines are in the right stage!
+        LINK
+        {
+            type = kspedia
+            target = staging
+            label = KSPedia: Staging
+        }
+    }
+
+    PAGE
+    {
+        title = Your First Launch
+        text = 1. Build a simple rocket: Mk1 Pod + FL-T400 Tank + LV-T30 Engine\n2. Add a parachute on top\n3. Launch and enjoy the ride!\n\nDon't worry about orbit yet — just get off the ground.
+        LINK
+        {
+            type = lesson
+            target = LSN_TestOrbitalMechanics
+            label = Next: Orbital Mechanics
+        }
+    }
+}
+
+INSTRUCTION_LESSON
+{
+    id = LSN_TestOrbitalMechanics
+    title = Orbital Mechanics
+    category = Getting Started
+    tags = orbits, basics
+    sortOrder = 2
+    visibleIf = LSN_TestRocketBasics.unlocked
+
+    PAGE
+    {
+        title = What Is an Orbit?
+        text = An orbit is a curved path around a celestial body. In KSP you need to reach about 2,200 m/s to orbit Kerbin.\n\nThe key insight: you're not flying UP — you're flying SIDEWAYS fast enough that you keep missing the ground.
+    }
+
+    PAGE
+    {
+        title = Achieving Orbit
+        text = 1. Launch straight up until ~10km\n2. Begin a gravity turn — tilt 5-10 degrees east\n3. Keep following the prograde marker\n4. At apoapsis, burn prograde to circularize\n\nWatch your map view (M key) to see your trajectory!
+        LINK
+        {
+            type = lesson
+            target = LSN_TestRocketBasics
+            label = Back: Rocket Basics
+        }
+    }
+}
+
+INSTRUCTION_LESSON
+{
+    id = LSN_TestPlaneBasics
+    title = Airplane Basics
+    category = Aviation
+    tags = planes, basics, beginner
+    sortOrder = 1
+
+    PAGE
+    {
+        title = Wings and Lift
+        text = Planes fly because wings generate lift as air flows over them. In KSP:\n\n- More wing area = more lift (but more drag)\n- Center of Lift (blue ball) should be slightly behind Center of Mass (yellow ball)\n- If CoL is ahead of CoM, the plane will be unstable
+    }
+
+    PAGE
+    {
+        title = Building a Plane
+        text = A basic plane needs:\n- Cockpit\n- Wings (with control surfaces)\n- Engine (jet or propeller)\n- Landing gear\n- Tail with control surfaces\n\nUse the SPH (Space Plane Hangar) to build planes.
+    }
+}
+
+INSTRUCTION_LESSON
+{
+    id = LSN_TestDocking
+    title = Docking
+    category = Advanced
+    tags = docking, rendezvous, advanced
+    sortOrder = 10
+    visibleIf = LSN_TestOrbitalMechanics.unlocked
+
+    PAGE
+    {
+        title = Rendezvous
+        text = Before you can dock, you need to rendezvous — get two vessels close together in orbit.\n\nThe key steps:\n1. Match orbital planes (fix inclination)\n2. Set target and wait for phase angle\n3. Burn to intercept\n4. At closest approach, match velocities
+    }
+
+    PAGE
+    {
+        title = Docking Procedure
+        text = Once within 200m:\n1. Switch to target-relative mode (NavBall)\n2. Point at the target docking port\n3. Translate (RCS) to align with the port\n4. Close distance at < 1 m/s\n5. Let the magnets grab!\n\nPatience is key. Slower is better.
+        LINK
+        {
+            type = url
+            target = https:\wiki.kerbalspaceprogram.com\Docking
+            label = KSP Wiki: Docking
+        }
+    }
+}
+
+INSTRUCTION_LESSON
+{
+    id = LSN_TestEVA
+    title = EVA Guide
+    category = Getting Started
+    tags = EVA, basics
+    sortOrder = 5
+
+    PAGE
+    {
+        title = Going on EVA
+        text = EVA (Extra-Vehicular Activity) lets your Kerbals leave their craft.\n\nPress the EVA button on the crew portrait, or right-click the hatch.\n\nKerbals have a jetpack with limited monopropellant — watch your fuel!
+    }
+}

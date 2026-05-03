@@ -1,0 +1,22 @@
+// KIK Test Pack — example KIK_CONTRACT_LESSON binding
+// Copy to GameData/KIK_TestPack/contract.cfg to use in-game
+// Requires ContractConfigurator
+
+// When the "UnmannedOrbit" CC contract is offered, unlock the
+// Orbital Mechanics lesson and show a link in Mission Control.
+KIK_CONTRACT_LESSON
+{
+    contract = UnmannedOrbit
+    lesson = LSN_TestOrbitalMechanics
+    unlockOn = OFFERED
+    showButton = true
+}
+
+// When FirstDocking is accepted, unlock docking lesson
+KIK_CONTRACT_LESSON
+{
+    contract = FirstDocking
+    lesson = LSN_TestDocking
+    unlockOn = ACCEPTED
+    showButton = true
+}

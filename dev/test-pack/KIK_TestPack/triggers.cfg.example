@@ -1,0 +1,31 @@
+// KIK Test Pack — example triggers
+// Copy to GameData/KIK_TestPack/triggers.cfg to use in-game
+
+// Unlock Rocket Basics immediately on game start
+LESSON_TRIGGER
+{
+    lesson = LSN_TestRocketBasics
+    onGameStart = true
+}
+
+// Unlock Plane Basics on game start too
+LESSON_TRIGGER
+{
+    lesson = LSN_TestPlaneBasics
+    onGameStart = true
+}
+
+// Unlock EVA Guide on game start
+LESSON_TRIGGER
+{
+    lesson = LSN_TestEVA
+    onGameStart = true
+}
+
+// Unlock Docking when a contract is accepted
+LESSON_TRIGGER
+{
+    lesson = LSN_TestDocking
+    onContract = FirstDocking
+    state = OFFERED
+}

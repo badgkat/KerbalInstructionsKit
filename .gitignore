@@ -1,0 +1,8 @@
+bin/
+obj/
+Plugins/*.dll
+Plugins/*.pdb
+Plugins/*.xml
+*.user
+*.suo
+.vs/

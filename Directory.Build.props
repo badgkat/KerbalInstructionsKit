@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>C:\Users\bklen\ksp-dev\KIK-build\$(MSBuildProjectName)\obj\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'KerbalInstructionsKit.Tests'">
+    <OutputPath>C:\Users\bklen\ksp-dev\KIK-build\$(MSBuildProjectName)\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+</Project>
