@@ -4,6 +4,15 @@ using UnityEngine;
 
 namespace KerbalInstructionsKit.Runtime
 {
+    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
+    public sealed class KikToolbarRegistration : MonoBehaviour
+    {
+        public void Start()
+        {
+            ToolbarControl.RegisterMod(KikToolbarHelper.Namespace, KikToolbarHelper.Tooltip);
+        }
+    }
+
     internal static class KikToolbarHelper
     {
         internal const string Namespace = "KerbalInstructionsKit";
@@ -14,21 +23,30 @@ namespace KerbalInstructionsKit.Runtime
 
         internal static ToolbarControl CreateToolbar(MonoBehaviour host, System.Action onClick)
         {
-            var toolbar = host.gameObject.AddComponent<ToolbarControl>();
-            toolbar.AddToAllToolbars(
-                () => onClick(),
-                () => onClick(),
-                KSP.UI.Screens.ApplicationLauncher.AppScenes.SPACECENTER
-                | KSP.UI.Screens.ApplicationLauncher.AppScenes.FLIGHT
-                | KSP.UI.Screens.ApplicationLauncher.AppScenes.VAB
-                | KSP.UI.Screens.ApplicationLauncher.AppScenes.SPH
-                | KSP.UI.Screens.ApplicationLauncher.AppScenes.TRACKSTATION,
-                Namespace,
-                ToolbarId,
-                LargeIcon,
-                SmallIcon,
-                Tooltip);
-            return toolbar;
+            try
+            {
+                var toolbar = host.gameObject.AddComponent<ToolbarControl>();
+                toolbar.AddToAllToolbars(
+                    () => onClick(),
+                    () => onClick(),
+                    KSP.UI.Screens.ApplicationLauncher.AppScenes.SPACECENTER
+                    | KSP.UI.Screens.ApplicationLauncher.AppScenes.FLIGHT
+                    | KSP.UI.Screens.ApplicationLauncher.AppScenes.VAB
+                    | KSP.UI.Screens.ApplicationLauncher.AppScenes.SPH
+                    | KSP.UI.Screens.ApplicationLauncher.AppScenes.TRACKSTATION,
+                    Namespace,
+                    ToolbarId,
+                    LargeIcon,
+                    SmallIcon,
+                    Tooltip);
+                Debug.Log($"[KIK] Toolbar button registered: {ToolbarId}");
+                return toolbar;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[KIK] Failed to create toolbar: {e}");
+                return null;
+            }
         }
     }
 
@@ -42,6 +60,7 @@ namespace KerbalInstructionsKit.Runtime
 
         public void Start()
         {
+            Debug.Log("[KIK] KikSceneAddonBase.Start() entered");
             scenario = FindObjectOfType<KerbalInstructionsKitScenario>();
             if (scenario == null)
             {
@@ -49,6 +68,7 @@ namespace KerbalInstructionsKit.Runtime
                 return;
             }
 
+            Debug.Log("[KIK] Scenario found, creating panel and toolbar");
             panel = new LessonPanel(scenario, CreatePauseController());
             toolbar = KikToolbarHelper.CreateToolbar(this, () => panel.Toggle());
 

@@ -11,4 +11,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.1.0.0")]
 [assembly: AssemblyFileVersion("0.1.0.0")]
 [assembly: KSPAssembly("KerbalInstructionsKit", 0, 1)]
+[assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 0)]
+[assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]
 [assembly: InternalsVisibleTo("KerbalInstructionsKit.Tests")]

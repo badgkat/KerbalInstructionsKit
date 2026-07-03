@@ -152,7 +152,6 @@ namespace KerbalInstructionsKit.Rendering
                     var r = GUILayoutUtility.GetRect(w, h, GUILayout.Width(w), GUILayout.Height(h));
                     r.x = (window.width - w) / 2;
                     GUI.DrawTexture(r, tex, ScaleMode.ScaleToFit);
-                    GUILayout.Space(h);
                 }
                 if (!string.IsNullOrEmpty(page.Caption))
                     GUILayout.Label(page.Caption, PanelStyles.Caption);

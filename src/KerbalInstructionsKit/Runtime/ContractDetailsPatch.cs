@@ -1,38 +1,39 @@
 using System;
-using System.Reflection;
+using System.Collections;
 using Contracts;
 using HarmonyLib;
 using KerbalInstructionsKit.Core;
 using KerbalInstructionsKit.Triggers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-
 namespace KerbalInstructionsKit.Runtime
 {
     [HarmonyPatch(typeof(KSP.UI.Screens.MissionControl), "UpdateInfoPanelContract")]
     public static class ContractDetailsPatch
     {
-        private const string LinkTag = "kik_lesson";
+        internal const string LinkTag = "kik_lesson";
 
-        public static void Postfix(KSP.UI.Screens.MissionControl __instance, Contract contract)
+        public static void Postfix(KSP.UI.Screens.MissionControl __instance, Contract __0)
         {
-            try { TryInjectLink(__instance, contract); }
+            if (__0 == null) return;
+            try
+            {
+                var lessonId = ResolveLessonId(__0);
+                if (lessonId != null)
+                    __instance.StartCoroutine(InjectAfterFrame(__instance, __0, lessonId));
+            }
             catch (Exception e) { Debug.LogWarning($"[KIK] contract-window patch error: {e}"); }
         }
 
-        private static void TryInjectLink(KSP.UI.Screens.MissionControl mc, Contract contract)
+        private static string ResolveLessonId(Contract contract)
         {
-            if (contract == null) return;
-
             var typeName = CcIntegration.GetContractTypeName(contract);
             var bindings = AttachLessonRegistry.Get(typeName);
-            if (bindings == null || bindings.Count == 0) return;
+            if (bindings == null || bindings.Count == 0) return null;
 
             var state = InstructionsKit.State;
-            if (state == null) return;
+            if (state == null) return null;
 
-            string lessonId = null;
             foreach (var binding in bindings)
             {
                 if (!binding.ShowButton) continue;
@@ -43,13 +44,18 @@ namespace KerbalInstructionsKit.Runtime
                     else
                         continue;
                 }
-                lessonId = binding.LessonId;
-                break;
+                return binding.LessonId;
             }
+            return null;
+        }
 
-            if (lessonId == null) return;
-
-            AppendLinkToDescription(mc, contract, lessonId);
+        private static IEnumerator InjectAfterFrame(
+            KSP.UI.Screens.MissionControl mc, Contract contract, string lessonId)
+        {
+            yield return new WaitForEndOfFrame();
+            yield return null;
+            try { AppendLinkToDescription(mc, contract, lessonId); }
+            catch (Exception e) { Debug.LogWarning($"[KIK] contract-link inject error: {e}"); }
         }
 
         private static void AppendLinkToDescription(
@@ -74,8 +80,9 @@ namespace KerbalInstructionsKit.Runtime
 
             target.text += "\n\n" +
                 $"<link=\"{LinkTag}\">" +
-                "<color=#82B4E8><u>\U0001F4D6 View Instructions</u></color>" +
+                "<color=#82B4E8><u>View Instructions</u></color>" +
                 "</link>";
+            target.ForceMeshUpdate();
 
             var handler = target.gameObject.GetComponent<ContractLinkClickHandler>()
                        ?? target.gameObject.AddComponent<ContractLinkClickHandler>();
@@ -103,26 +110,37 @@ namespace KerbalInstructionsKit.Runtime
         }
     }
 
-    public sealed class ContractLinkClickHandler : MonoBehaviour, IPointerClickHandler
+    public sealed class ContractLinkClickHandler : MonoBehaviour
     {
         private TMP_Text textComponent;
         private string lessonId;
+        private Camera uiCamera;
 
         public void Init(TMP_Text text, string lesson)
         {
             textComponent = text;
             lessonId = lesson;
+            var canvas = text.GetComponentInParent<Canvas>();
+            uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+                ? canvas.worldCamera : null;
+            Debug.Log($"[KIK] ContractLinkClickHandler initialized for lesson '{lesson}'");
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void Update()
         {
             if (textComponent == null || string.IsNullOrEmpty(lessonId)) return;
+            if (!Input.GetMouseButtonDown(0)) return;
+
             int linkIndex = TMP_TextUtilities.FindIntersectingLink(
-                textComponent, eventData.position, eventData.pressEventCamera);
+                textComponent, Input.mousePosition, uiCamera);
             if (linkIndex < 0) return;
+
             var info = textComponent.textInfo.linkInfo[linkIndex];
-            if (info.GetLinkID() == "kik_lesson")
+            if (info.GetLinkID() == ContractDetailsPatch.LinkTag)
+            {
+                Debug.Log($"[KIK] View Instructions clicked for lesson '{lessonId}'");
                 InstructionsKit.OpenLesson(lessonId);
+            }
         }
     }
 }

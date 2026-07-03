@@ -13,6 +13,12 @@ Content-driven instructional panel for KSP 1.12.x. Lesson content is defined ent
 - Per-save state persistence via ScenarioModule
 - Pause/resume support in flight scene
 
+## Security Note: External URL Links
+
+Lesson pages can include `LINK { type = url }` nodes that open a URL in the player's default browser via `Application.OpenURL`. KIK validates that the URL uses an `http://` or `https://` scheme — other protocols (`file://`, `javascript:`, etc.) are rejected at load time.
+
+However, KIK does not restrict which domains a lesson can link to. Any mod that ships cfg content with URL links can direct players to arbitrary websites. This is by design — lesson authors need the flexibility to link to wikis, tutorials, and external resources — but players should be aware that **URL links in lessons are controlled by the mod that provides the cfg content, not by KIK itself**. The same trust model applies as with any other mod content: only install mods from sources you trust.
+
 ## Dependencies
 
 - Harmony (000_Harmony)
